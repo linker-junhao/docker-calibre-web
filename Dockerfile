@@ -29,13 +29,9 @@ RUN \
     libxslt1.1 \
     python3-venv && \
   echo "**** install calibre-web ****" && \
-  if [ -z ${CALIBREWEB_RELEASE+x} ]; then \
-    CALIBREWEB_RELEASE=$(curl -sX GET "https://api.github.com/repos/janeczku/calibre-web/releases/latest" \
-    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
-  fi && \
-  curl -o \
+  curl -x http://host.docker.internal:7890 -o \
     /tmp/calibre-web.tar.gz -L \
-    https://github.com/janeczku/calibre-web/archive/${CALIBREWEB_RELEASE}.tar.gz && \
+    https://github.com/linker-junhao/calibre-web/tarball/ebook && \
   mkdir -p \
     /app/calibre-web && \
   tar xf \
@@ -51,10 +47,10 @@ RUN \
     optional-requirements.txt && \
   echo "***install kepubify" && \
   if [ -z ${KEPUBIFY_RELEASE+x} ]; then \
-    KEPUBIFY_RELEASE=$(curl -sX GET "https://api.github.com/repos/pgaskin/kepubify/releases/latest" \
+    KEPUBIFY_RELEASE=$(curl -x http://host.docker.internal:7890 -sX GET "https://api.github.com/repos/pgaskin/kepubify/releases/latest" \
     | awk '/tag_name/{print $4;exit}' FS='[""]'); \
   fi && \
-  curl -o \
+  curl -x http://host.docker.internal:7890 -o \
     /usr/bin/kepubify -L \
     https://github.com/pgaskin/kepubify/releases/download/${KEPUBIFY_RELEASE}/kepubify-linux-64bit && \
   echo "**** cleanup ****" && \
